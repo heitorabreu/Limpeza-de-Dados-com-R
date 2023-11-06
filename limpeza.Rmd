@@ -1,0 +1,163 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+
+```{r}
+dados = read.csv("empresas/empresas6.csv", sep=";", na.strings ="", stringsAsFactors = T, skip = 1, nrows=1045)
+View(dados)
+
+#summary(dados$Segmento)
+#summary(dados$Número.de.Seguidores)
+#summary(dados$CNAE)
+#summary(dados$Ifood)
+#summary(dados$Avaliação.Google)
+#summary(dados$Avaliação.Ifood)
+```
+
+
+```{r}
+dados2 = read.csv("empresas/empresas4.csv", sep=";", na.strings="", stringsAsFactors = T, skip = 1, nrows =1046)
+#View(dados2)
+
+#summary(dados2$Segmento)
+summary(dados2$Número.de.Seguidores)
+#dados2$Número.de.Seguidores
+
+#summary(dados2$CNAE)
+#summary(dados2$Ifood)
+summary(dados2$Avaliação.Google)
+summary(dados2$Avaliação.Ifood)
+summary(dados2$Outra.Plataforma.de.Delivery)
+
+levels(dados2$Outra.Plataforma.de.Delivery)[levels(dados2$Outra.Plataforma.de.Delivery) == "Anota ai" | 
+                                            levels(dados2$Outra.Plataforma.de.Delivery) == "Anota Ai" | 
+                                            levels(dados2$Outra.Plataforma.de.Delivery) == "Anota Aí"
+                                            ] <- "Anota Aí"
+
+levels(dados2$Outra.Plataforma.de.Delivery)[levels(dados2$Outra.Plataforma.de.Delivery) == "Plataforma Própria; Goomer"
+                                            ] <- "Goomer"
+
+levels(dados2$Outra.Plataforma.de.Delivery)[levels(dados2$Outra.Plataforma.de.Delivery) == "Grand Chef" |
+                                            levels(dados2$Outra.Plataforma.de.Delivery) == "Grandchef"
+                                            ] <- "GrandChef"
+
+levels(dados2$Outra.Plataforma.de.Delivery)[levels(dados2$Outra.Plataforma.de.Delivery) == "Menu Dino" |
+                                            levels(dados2$Outra.Plataforma.de.Delivery) == "Menudino"
+                                            ] <- "MenuDino"
+
+levels(dados2$Outra.Plataforma.de.Delivery)[levels(dados2$Outra.Plataforma.de.Delivery) == "Plataforma Propria" |
+                                            levels(dados2$Outra.Plataforma.de.Delivery) == "Plataforma Própria" |
+                                            levels(dados2$Outra.Plataforma.de.Delivery) == " Plataforma Propria"
+                                            ] <- "Própria"
+
+levels(dados2$Outra.Plataforma.de.Delivery)[levels(dados2$Outra.Plataforma.de.Delivery) == "Rappi; Plataforma Própria" |
+                                            levels(dados2$Outra.Plataforma.de.Delivery) == "Rappii; Plataforma Propria"
+                                            ] <- "Rappi"
+
+levels(dados2$Outra.Plataforma.de.Delivery)[levels(dados2$Outra.Plataforma.de.Delivery) == "WayMenu "] <- "WayMenu"
+
+levels(dados2$Outra.Plataforma.de.Delivery)[levels(dados2$Outra.Plataforma.de.Delivery) == "Whatsapp" |
+                                            levels(dados2$Outra.Plataforma.de.Delivery) == "WhatsApp"
+                                            ] <- "*"
+
+```
+
+
+```{r}
+summary(dados2$Ifood)
+levels(dados2$Ifood)[levels(dados2$Ifood) == "Ativo" |
+                                            levels(dados2$Ifood) == " Ativo"
+                                            ] <- "Ativo"
+
+levels(dados2$Ifood)[levels(dados2$Ifood) == "Inativo" |
+                                            levels(dados2$Ifood) == "*"
+                                            ] <- "*"
+```
+
+
+```{r}
+#Contando CNPJs que se repetem
+repetidos = which(duplicated(dados2$CNPJ))
+contagem_rep = table(dados2$CNPJ[repetidos])
+for(i in seq_along(contagem_rep)){
+  cnpj = names(contagem_rep)[i]
+  contagem = contagem_rep[i]
+  if(contagem >=1){
+    cat("CNPJ: ", cnpj, " - Contagem: ", contagem, "\n")
+  }
+}
+
+#Contando endereços que se repetem
+repetidos2 = which(duplicated(dados2$Endereço))
+contagem_rep2 = table(dados2$Endereço[repetidos2])
+for(i in seq_along(contagem_rep2)){
+  endereco = names(contagem_rep2)[i]
+  contagem2 = contagem_rep2[i]
+  if(contagem2 >=1)
+    cat("endereco: ", endereco, " - Contagem: ", contagem2, "\n")
+}
+
+#Contando nomes que se repetem
+repetidos3 = which(duplicated(dados2$Nome))
+contagem_rep3 = table(dados2$Nome[repetidos3])
+for(i in seq_along(contagem_rep3)){
+  nome = names(contagem_rep3)[i]
+  contagem3 = contagem_rep3[i]
+  if(contagem3 >=1)
+    cat("Nome: ", nome, " - Contagem: ", contagem3, "\n")
+}
+```
+
+
+```{r}
+
+
+cnpj_nome = unique(c(repetidos, repetidos3))
+cnpj_endereco = unique(c(repetidos, repetidos2))
+nome_endereco = unique(c(repetidos2, repetidos3))
+cnpj_nome_endereco = unique(c(repetidos, repetidos2, repetidos3))
+
+#Conjunto sem CNPJs repetidos
+data_cnpj = dados2[-repetidos, ]
+#data_cnpj
+
+#Conjunto sem nomes repetidos
+data_nome = dados2[-repetidos3, ]
+#data_nome
+
+#Conjunto sem endereços repetidos (Não é uma boa alternativa, pois empresas de um mesmo shopping tem um mesmo endereço)
+data_end = dados2[-repetidos2, ]
+#data_end
+
+#Conjunto sem CNPJs e Nomes repetidos
+data_cnpj_nome = dados2[-cnpj_nome, ]
+#data_cnpj_nome
+
+
+summary(data_cnpj$Número.de.Seguidores)
+summary(data_cnpj$Ifood)
+summary(data_cnpj$Avaliação.Google)
+summary(data_cnpj$Avaliação.Ifood)
+
+summary(data_nome$Número.de.Seguidores)
+summary(data_nome$Ifood)
+summary(data_nome$Avaliação.Google)
+summary(data_nome$Avaliação.Ifood)
+
+summary(data_cnpj_nome$Número.de.Seguidores)
+summary(data_cnpj_nome$Ifood)
+summary(data_cnpj_nome$Avaliação.Google)
+summary(data_cnpj_nome$Avaliação.Ifood)
+
+
+summary(data_cnpj_nome$Avaliação.Google)
+summary(data_cnpj_nome$Avaliação.Ifood)
+summary(data_cnpj_nome$Número.de.Seguidores)
+
+
+```

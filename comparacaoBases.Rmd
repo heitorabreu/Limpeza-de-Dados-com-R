@@ -1,0 +1,87 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+```{r}
+data = read.csv("empresas/empresas6.csv", sep=";", na.strings =c("", " "), stringsAsFactors = T, skip = 1, nrows=1045, dec = ",") 
+summary(data$Outra.Plataforma.de.Delivery)
+summary(data$Instagram.Facebook)
+summary(data$Número.de.Seguidores)
+summary(data$Avaliação.Google)
+summary(data$Ifood)
+summary(data$Avaliação.Ifood)
+```
+
+
+```{r}
+#Contando CNPJs que se repetem
+repetidos = which(duplicated(data$CNPJ))
+contagem_rep = table(data$CNPJ[repetidos])
+for(i in seq_along(contagem_rep)){
+  cnpj = names(contagem_rep)[i]
+  contagem = contagem_rep[i]
+  if(contagem >=1){
+    cat("CNPJ: ", cnpj, " - Contagem: ", contagem, "\n")
+  }
+}
+
+#Contando nomes que se repetem
+repetidos3 = which(duplicated(data$Nome))
+contagem_rep3 = table(data$Nome[repetidos3])
+for(i in seq_along(contagem_rep3)){
+  nome = names(contagem_rep3)[i]
+  contagem3 = contagem_rep3[i]
+  if(contagem3 >=1)
+    cat("Nome: ", nome, " - Contagem: ", contagem3, "\n")
+}
+```
+
+
+```{r}
+cnpj_nome = unique(c(repetidos, repetidos3))
+
+#Conjunto sem CNPJs repetidos
+data_cnpj = data[-repetidos, ]
+#data_cnpj
+
+#Conjunto sem nomes repetidos
+data_nome = data[-repetidos3, ]
+#data_nome
+
+#Conjunto sem CNPJs e Nomes repetidos
+data_cnpj_nome = data[-cnpj_nome, ]
+#data_cnpj_nome
+
+
+summary(data_cnpj$Número.de.Seguidores)
+summary(data_cnpj$Avaliação.Google)
+summary(data_cnpj$Avaliação.Ifood)
+
+summary(data_nome$Instagram.Facebook)
+summary(data_nome$Número.de.Seguidores)
+summary(data_nome$Avaliação.Google)
+summary(data_nome$Avaliação.Ifood)
+
+summary(data_cnpj_nome$Outra.Plataforma.de.Delivery)
+summary(data_cnpj_nome$Instagram.Facebook)
+summary(data_cnpj_nome$Número.de.Seguidores)
+summary(data_cnpj_nome$Avaliação.Google)
+summary(data_cnpj_nome$Ifood)
+summary(data_cnpj_nome$Avaliação.Ifood)
+summary(data_cnpj_nome$Segmento)
+
+```
+
+
+```{r}
+afData = read.csv("empresas/empresas7.csv", sep=";", na.strings =c("", " "), stringsAsFactors = T, skip = 1, nrows=1045, dec = ",")
+
+summary(afData$Número.de.Seguidores)
+summary(afData$Avaliação.Google)
+summary(afData$Avaliação.Ifood)
+
+View(afData)
+```
+
