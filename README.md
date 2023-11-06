@@ -1,1 +1,1 @@
-# Limpeza-de-Dados-com-R
+Neste repositório estão armazenados alguns scripts da linguagem R que utilizei para realizar a limpeza da base de dados que utilizei durante meu projeto, 'Desafios para garantir a qualidade dos dados coletados de fontes diversas.', apresentado no Congresso de Iniciação Científica da UNESP.
